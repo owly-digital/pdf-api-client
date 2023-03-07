@@ -1,0 +1,29 @@
+{
+  "name": "owly-digital/pdf-api-client",
+  "description": "Client for owly-digital/pdf-api",
+  "keywords": [
+    "api",
+    "pdf"
+  ],
+  "type": "library",
+  "homepage": "https://github.com/owly-digital/pdf-api-client",
+  "authors": [
+    {
+      "name": "Patrik Kulíšek",
+      "homepage": "https://owly.digital"
+    }
+  ],
+  "require": {
+    "php": ">= 7.4",
+    "symfony/http-client": "^5.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Owly\\PdfApiClient\\": "src"
+    }
+  },
+  "minimum-stability": "stable",
+  "config": {
+    "sort-packages": true
+  }
+}
