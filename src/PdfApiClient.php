@@ -3,6 +3,8 @@
 namespace Owly\PdfApiClient;
 
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\Mime\Part\DataPart;
+use Symfony\Component\Mime\Part\Multipart\FormDataPart;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -30,23 +32,21 @@ class PdfApiClient
 		$client = HttpClient::create();
 
 		try {
-			$multipart = [];
+			$dataParts = [];
 
 			foreach ($files as $file) {
 				if (file_exists($file)) {
-					$multipart[] = [
-						'name' => pathinfo($file, PATHINFO_FILENAME),
-						'filename' => pathinfo($file, PATHINFO_FILENAME),
-						'contents' => file_get_contents($file)
-					];
+					$dataParts[pathinfo($file, PATHINFO_FILENAME)] = DataPart::fromPath($file, basename($file), 'application/pdf');
 				}
 			}
 
-			$response = $client->request('POST', $this->url, [
-				'multipart' => $multipart,
-				'headers' => [
-					'X-Auth-Token' => $this->token
-				]
+			$formDataPart = new FormDataPart($dataParts);
+			$headers = $formDataPart->getPreparedHeaders()->toArray();
+			$headers['X-Auth-Token'] = $this->token;
+
+			$response = $client->request('POST', $this->url . 'api/v1/pdf/merge', [
+				'headers' => $headers,
+				'body' => $formDataPart->bodyToString(),
 			]);
 
 			return $response->getContent();
