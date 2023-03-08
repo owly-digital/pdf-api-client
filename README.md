@@ -16,7 +16,7 @@
 - [Initialization](#initialization)
 - [Endpoints](#endpoints)
 	- [Merge](#merge)
-	- [Rasterize PDF](#rasterize-pdf)
+	- [Convert](#convert)
 
 ## Setup
 
@@ -53,5 +53,48 @@ $mergedPdfFile = $client->mergePdfFiles($pdfFiles);
 file_put_contents('merged.pdf', $mergedPdfFile);
 ```
 
-### Rasterize PDF
-🚧 WIP
+### Convert
+Convert PDF files (also with multiple pages) into various formats.
+
+**Parameters:**
+- Formats: `jpg`, `png`, `webp` (default `jpg`)
+- Quality: _(detected automatically when omited)_
+  - `jpg`: 0 - 100 (default `85`)
+  - `png`: 0 - 9 (default `9`)
+  - `webp`: (default `80`)
+- Resolution (in pixels per inch) (default `600` - suitable for printing)
+
+#### Example
+
+```php
+$pdfFiles = [
+  'path/to/1.pdf',
+  'path/to/2.pdf',
+];
+
+// Basic conversion with automatically detected quality and printable resolution
+$convertedFiles = $client->convertPdfFiles($pdfFiles, 'jpg');
+
+// With custom quality and resolution
+$convertedFiles = $client->convertPdfFiles($pdfFiles, 'jpg', 50, 300);
+
+// Conversion to webp with custom resolution (default quality)
+$convertedFiles = $client->convertPdfFiles($pdfFiles, 'webp', null, 300);
+
+foreach ($convertedFiles as $name => $file) {
+	file_put_contents('/path/' . $name, base64_decode($file));
+}
+```
+
+#### PDF with multiple pages
+When PDF with multiple pages passed, to each page is added suffix with page number.
+
+```
+Input:
+awesomePdfFile.pdf (3 pages)
+
+Output:
+awesomePdfFile_0.jpg
+awesomePdfFile_1.jpg
+awesomePdfFile_2.jpg
+```
