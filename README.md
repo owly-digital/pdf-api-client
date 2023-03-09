@@ -17,6 +17,7 @@
 - [Endpoints](#endpoints)
 	- [Merge](#merge)
 	- [Convert](#convert)
+	- [HTML to PDF](#html-to-pdf)
 
 ## Setup
 
@@ -98,3 +99,6 @@ awesomePdfFile_0.jpg
 awesomePdfFile_1.jpg
 awesomePdfFile_2.jpg
 ```
+
+### HTML to PDF
+🚧
