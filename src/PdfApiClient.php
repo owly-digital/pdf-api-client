@@ -5,10 +5,6 @@ namespace Owly\PdfApiClient;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Mime\Part\DataPart;
 use Symfony\Component\Mime\Part\Multipart\FormDataPart;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class PdfApiClient
 {
@@ -35,26 +31,22 @@ class PdfApiClient
 		}
 
 		$client = HttpClient::create();
+		$formDataPart = $this->prepareFormDataPart($files);
+		$headers = $formDataPart->getPreparedHeaders()->toArray();
+		$headers['X-Auth-Token'] = $this->token;
 
-		try {
-			$formDataPart = $this->prepareFormDataPart($files);
-			$headers = $formDataPart->getPreparedHeaders()->toArray();
-			$headers['X-Auth-Token'] = $this->token;
+		$response = $client->request('POST', $this->url . 'pdf/merge', [
+			'headers' => $headers,
+			'body' => $formDataPart->bodyToString(),
+		]);
 
-			$response = $client->request('POST', $this->url . 'pdf/merge', [
-				'headers' => $headers,
-				'body' => $formDataPart->bodyToString(),
-			]);
+		$content = json_decode($response->getContent(false), true);
 
-			return $response->getContent();
-		} catch (
-			ClientExceptionInterface |
-			RedirectionExceptionInterface |
-			ServerExceptionInterface |
-			TransportExceptionInterface $e
-		) {
+		if (isset($content['errors'])) {
 			return null;
 		}
+
+		return $content;
 	}
 
 	/**
@@ -74,30 +66,27 @@ class PdfApiClient
 		}
 
 		$client = HttpClient::create();
+		$formDataPart = $this->prepareFormDataPart($files, [
+			'format' => $format,
+			'quality' => (string) $quality,
+			'resolution' => (string) $resolution
+		]);
+		$headers = $formDataPart->getPreparedHeaders()->toArray();
+		$headers['X-Auth-Token'] = $this->token;
 
-		try {
-			$formDataPart = $this->prepareFormDataPart($files, [
-				'format' => $format,
-				'quality' => (string) $quality,
-				'resolution' => (string) $resolution
-			]);
-			$headers = $formDataPart->getPreparedHeaders()->toArray();
-			$headers['X-Auth-Token'] = $this->token;
+		$response = $client->request('POST', $this->url . 'pdf/convert', [
+			'headers' => $headers,
+			'body' => $formDataPart->bodyToString(),
+		]);
 
-			$response = $client->request('POST', $this->url . 'pdf/convert', [
-				'headers' => $headers,
-				'body' => $formDataPart->bodyToString(),
-			]);
+		$content = json_decode($response->getContent(false), true);
 
-			return json_decode($response->getContent(), true);
-		} catch (
-			ClientExceptionInterface |
-			RedirectionExceptionInterface |
-			ServerExceptionInterface |
-			TransportExceptionInterface $e
-		) {
+		if (isset($content['errors'])) {
 			return null;
 		}
+
+		return $content;
+
 	}
 
 	private function prepareFormDataPart(array $files, array $options = []): FormDataPart
