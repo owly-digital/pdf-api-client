@@ -86,7 +86,33 @@ class PdfApiClient
 		}
 
 		return $content;
+	}
 
+	/**
+	 * Returns converted PDF file (not base64 encoded - can be directly forwared for download)
+	 *
+	 * @param string $html
+	 * @param string|null $filename
+	 * @return string|null PDF file when success, null when failed
+	 */
+	public function convertHtmlToPdf(string $html, ?string $filename = null): ?string
+	{
+		$client = HttpClient::create();
+		$headers['X-Auth-Token'] = $this->token;
+
+		$response = $client->request('POST', $this->url . 'pdf/from-html', [
+			'headers' => $headers,
+			'body' => [
+				'html' => $html,
+				'filename' => $filename
+			],
+		]);
+
+		if ($response->getStatusCode() === 200) {
+			return $response->getContent(false);
+		}
+
+		return null;
 	}
 
 	private function prepareFormDataPart(array $files, array $options = []): FormDataPart
