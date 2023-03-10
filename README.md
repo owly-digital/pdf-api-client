@@ -17,6 +17,7 @@
 - [Endpoints](#endpoints)
 	- [Merge](#merge)
 	- [Convert](#convert)
+	- [HTML to PDF](#html-to-pdf)
 
 ## Setup
 
@@ -97,4 +98,16 @@ Output:
 awesomePdfFile_0.jpg
 awesomePdfFile_1.jpg
 awesomePdfFile_2.jpg
+```
+
+### HTML to PDF
+
+```php
+$html = "<html><body><h1>Look At Me, I'm PDF now!</h1></body></html>";
+
+// $pdf can be directly forwarded for download
+$pdf = $client->convertHtmlToPdf($html);
+
+// or with custom filename
+$pdf = $client->convertHtmlToPdf($html, 'awesomePdfFile.pdf');
 ```
