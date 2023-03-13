@@ -95,7 +95,7 @@ class PdfApiClient
 	 * @param string|null $filename
 	 * @return string|null PDF file when success, null when failed
 	 */
-	public function convertHtmlToPdf(string $html, ?string $filename = null): ?string
+	public function convertHtmlToPdf(string $html, ?string $filename = null, bool $printHeaderFooter = false): ?string
 	{
 		$client = HttpClient::create();
 		$headers['X-Auth-Token'] = $this->token;
@@ -104,7 +104,8 @@ class PdfApiClient
 			'headers' => $headers,
 			'body' => [
 				'html' => $html,
-				'filename' => $filename
+				'filename' => $filename,
+				'printHeaderFooter' => $printHeaderFooter,
 			],
 		]);
 
