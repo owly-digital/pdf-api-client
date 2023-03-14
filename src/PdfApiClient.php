@@ -93,20 +93,22 @@ class PdfApiClient
 	 *
 	 * @param string $html
 	 * @param string|null $filename
+	 * @param array $options see https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF
 	 * @return string|null PDF file when success, null when failed
 	 */
-	public function convertHtmlToPdf(string $html, ?string $filename = null, bool $printHeaderFooter = false): ?string
+	public function convertHtmlToPdf(string $html, ?string $filename = null, array $options = []): ?string
 	{
 		$client = HttpClient::create();
 		$headers['X-Auth-Token'] = $this->token;
+		$body = [
+			'html' => $html,
+			'filename' => $filename,
+			'options' => $options
+		];
 
 		$response = $client->request('POST', $this->url . 'pdf/from-html', [
 			'headers' => $headers,
-			'body' => [
-				'html' => $html,
-				'filename' => $filename,
-				'printHeaderFooter' => $printHeaderFooter,
-			],
+			'body' => json_encode($body),
 		]);
 
 		if ($response->getStatusCode() === 200) {
