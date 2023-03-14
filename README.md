@@ -102,6 +102,7 @@ awesomePdfFile_2.jpg
 
 ### HTML to PDF
 
+#### Basic conversion
 ```php
 $html = "<html><body><h1>Look At Me, I'm PDF now!</h1></body></html>";
 
@@ -110,4 +111,16 @@ $pdf = $client->convertHtmlToPdf($html);
 
 // or with custom filename
 $pdf = $client->convertHtmlToPdf($html, 'awesomePdfFile.pdf');
+```
+
+#### Advanced conversion
+You can customize conversion with [DevTools Protocol Options](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF)
+```php
+// Show footer with page numbers
+$options = [
+	'displayHeaderFooter' => true,
+	'headerTemplate' => '<div></div>',
+	'footerTemplate' => '<div>Page: <span class="pageNumber"></span> / <span class="totalPages"></span></div>'
+];
+$pdf = $client->convertHtmlToPdf($html, null, $options);
 ```
