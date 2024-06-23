@@ -3,8 +3,7 @@
 </h1>
 
 <p align="center">
-  Working with PDF files in PHP should be headache, because you need Imagick extension, Ghostscript interpreter, etc.<br />
-  So we created own API for basic PDF operations like merging, converting and stacking.
+	Working with PDF files in PHP can be a significant challenge. It requires not only the integration of multiple technologies but also the ability to configure the server. To address this, we have developed our own PDF server that handles the most critical operations seamlessly.
 </p>
 
 ##
@@ -28,7 +27,7 @@ composer require owly-digital/pdf-api-client
 ```
 
 ## Retrieve Token
-You can retrieve token by contacting us at info@owly.cz
+You can retrieve token by contacting us at [info@owly.digital](mailto:info@owly.digital)
 
 ## Initialization
 
