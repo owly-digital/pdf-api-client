@@ -15,8 +15,8 @@
 	],
 	"require": {
 		"php": ">= 8.2",
-		"symfony/http-client": "^5.4",
-		"symfony/mime": "^5.4"
+		"symfony/http-client": "^7.1",
+		"symfony/mime": "^7.1"
 	},
 	"autoload": {
 		"psr-4": {
